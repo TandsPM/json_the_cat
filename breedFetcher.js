@@ -1,5 +1,5 @@
 const request = require('request');
-const breedName = process.argv[2];
+
 
 const fetchBreedDescription = function(breedName, callback) {
   const url = `https://api.thecatapi.com/v1/breeds/search?q=${breedName}`;
@@ -7,26 +7,24 @@ const fetchBreedDescription = function(breedName, callback) {
   request(url, (error, resp, body) => {
     if (error) {
       callback(`Error: ${error}`, null);
-    } else {
-      if (body === "INVALID_DATA") {
-        callback("INVALID_DATA", null);
-      } else {
-      const data = JSON.parse(body);
-
-      if (data.length === 0) {
-        callback("No cats with this breed name");
-      } else {
-        callback(data[0]["description"]);
-      }
     }
+    const data = JSON.parse(body);
+    const breed = data[0];
+
+    if (breed) {
+      callback(null, breed.description);
+    } else {
+      callback("Breed not found");
     }
   });
 };
 
-fetchBreedDescription(breedName, (error, description) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(description);
-  }
-});
+// fetchBreedDescription(breedName, (error, description) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log(description);
+//   }
+// });
+
+module.exports = { fetchBreedDescription };

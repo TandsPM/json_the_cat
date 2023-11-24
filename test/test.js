@@ -1,3 +1,0 @@
-fetchBreedDescription('Siberian', (error, description) => {
-
-});
